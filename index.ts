@@ -2,12 +2,12 @@ import express, { Express, NextFunction, Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
+import httpStatus from "http-status";
 
 dotenv.config();
 import logger from "./logger";
 import AppError from "./utils/AppError";
 import { errorResponse } from "./config/responseConfig";
-import httpStatus from "http-status";
 
 const PORT = process.env.PORT || 5000;
 const app: Express = express();
@@ -40,7 +40,7 @@ app.use((err: AppError, _: Request, res: Response, next: NextFunction) => {
   errorResponse(
     res,
     err.statusCode ?? httpStatus.INTERNAL_SERVER_ERROR,
-    err.message,
+    err.message
   );
 });
 
