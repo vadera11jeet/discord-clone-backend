@@ -35,7 +35,7 @@ app.all("*", (req: Request, res: Response, next: NextFunction) => {
 
 app.use((err: AppError, _: Request, res: Response, next: NextFunction) => {
   logger.error(
-    `status: ${err.statusCode ?? httpStatus.INTERNAL_SERVER_ERROR} ${err}`
+    `status: ${err.statusCode ?? httpStatus.INTERNAL_SERVER_ERROR} message: ${err}`
   );
   if (res.headersSent) {
     return next(err);
