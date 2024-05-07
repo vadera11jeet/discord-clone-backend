@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { ClerkClient } from "@clerk/clerk-sdk-node";
+import { z } from "zod";
 
 export async function authentication(
   req: Request,
@@ -9,7 +10,6 @@ export async function authentication(
   const token = req.cookies.__session;
 
   if (!token) {
-    return res.status(401).json()
+    return res.status(401).json();
   }
-  
 }

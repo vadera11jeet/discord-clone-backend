@@ -30,7 +30,7 @@ app.use("/v1", routes);
 
 app.all("*", (req: Request, res: Response, next: NextFunction) => {
   logger.error(`can't find route ${req.originalUrl}`);
-  next(new AppError("can't find route ", httpStatus.NOT_FOUND));
+  next(new AppError("can't find route", httpStatus.NOT_FOUND));
 });
 
 app.use((err: AppError, _: Request, res: Response, next: NextFunction) => {

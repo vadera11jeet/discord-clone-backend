@@ -18,7 +18,7 @@ model Profile{
   userId String @unique
   imageUrl String @db.Text
   name String
-  email String @db.Text
+  email String @db.Text @unique
 
   servers Server[]
   mermbers Member[]
