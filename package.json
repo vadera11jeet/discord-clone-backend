@@ -2,12 +2,12 @@
   "name": "discord-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
+  "main": "server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc",
-    "start": "node  dist/index.js",
-    "dev": "nodemon index.ts",
+    "start": "node  dist/server.js",
+    "dev": "nodemon server.ts",
     "lint": "npx eslint .",
     "lint:fix": "npx eslint --fix",
     "format": "eslint src/**/*.ts --fix"
@@ -17,13 +17,15 @@
   "license": "ISC",
   "dependencies": {
     "@clerk/clerk-sdk-node": "^5.0.1",
+    "@prisma/client": "^5.13.0",
     "@types/cors": "^2.8.17",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "http-status": "^1.7.4",
-    "winston": "^3.13.0"
+    "winston": "^3.13.0",
+    "zod": "^3.23.6"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.0.2",

@@ -1,4 +1,5 @@
 import { Response } from "express";
+import logger from "../logger";
 
 export const successResponse = function (
   res: Response,
@@ -6,6 +7,11 @@ export const successResponse = function (
   data: unknown,
   message?: string
 ): void {
+  
+  logger.info(
+    `responseData: ${JSON.stringify(data)} statusCode: ${statusCode} message: ${message}`
+  );
+
   res.status(statusCode).json({
     data,
     message,

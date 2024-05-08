@@ -8,6 +8,7 @@ dotenv.config();
 import logger from "./logger";
 import AppError from "./utils/AppError";
 import { errorResponse } from "./config/responseConfig";
+import routes from "./routes/route";
 
 const PORT = process.env.PORT || 5000;
 const app: Express = express();
@@ -25,14 +26,16 @@ app.get("/", (_: Request, res: Response) => {
   res.status(httpStatus.OK).send("hello world");
 });
 
+app.use("/v1", routes);
+
 app.all("*", (req: Request, res: Response, next: NextFunction) => {
   logger.error(`can't find route ${req.originalUrl}`);
-  next(new AppError("can't find route ", httpStatus.NOT_FOUND));
+  next(new AppError("can't find route", httpStatus.NOT_FOUND));
 });
 
 app.use((err: AppError, _: Request, res: Response, next: NextFunction) => {
   logger.error(
-    `status: ${err.statusCode ?? httpStatus.INTERNAL_SERVER_ERROR} ${err}`
+    `status: ${err.statusCode ?? httpStatus.INTERNAL_SERVER_ERROR} message: ${err}`
   );
   if (res.headersSent) {
     return next(err);
