@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import httpStatus from "http-status";
 import { z } from "zod";
-import AppError from "../../utils/AppError";
+import bodyValidator from "./validator";
 
 export const userProfileSchema = z.object({
   email: z
@@ -30,17 +29,7 @@ export const userProfileSchema = z.object({
 });
 
 function userProfileValidator(req: Request, res: Response, next: NextFunction) {
-  const validate = userProfileSchema.safeParse(req.body);
-
-  if (validate.error)
-    return next(
-      new AppError(
-        validate.error.errors[0].message,
-        httpStatus.UNPROCESSABLE_ENTITY
-      )
-    );
-
-  next();
+  bodyValidator(req, res, next, userProfileSchema);
 }
 
 export default userProfileValidator;

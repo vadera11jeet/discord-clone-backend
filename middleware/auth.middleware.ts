@@ -8,6 +8,7 @@ export async function authentication(
   next: NextFunction
 ) {
   const token = req.cookies.__session;
+  console.log("🚀 ~ file: auth.middleware.ts:11 ~ token:", token)
 
   if (!token) {
     return res.status(401).json();

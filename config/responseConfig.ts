@@ -9,7 +9,7 @@ export const successResponse = function (
 ): void {
   
   logger.info(
-    `responseData: ${JSON.stringify(data)} statusCode: ${statusCode} message: ${message}`
+    `responseData: ${JSON.stringify(data)} statusCode: ${statusCode} message: ${message ?? "success"}`
   );
 
   res.status(statusCode).json({

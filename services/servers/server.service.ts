@@ -12,3 +12,7 @@ export async function findRecentServerByUserId(userId: string) {
     },
   });
 }
+
+export async function createDiscordServer(serverInfo: Prisma.ServerCreateInput) {
+  return db.server.create({ data: serverInfo });
+}
