@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { ClerkClient } from "@clerk/clerk-sdk-node";
-import { z } from "zod";
+import { clerkClient } from "@clerk/clerk-sdk-node";
+import AppError from "../utils/AppError";
+import httpStatus from "http-status";
 
 export async function authentication(
   req: Request,
@@ -10,6 +11,15 @@ export async function authentication(
   const token = req.cookies.__session;
 
   if (!token) {
-    return res.status(401).json();
+    return next(new AppError("You are not logged in", httpStatus.UNAUTHORIZED));
+  }
+
+  try {
+    await clerkClient.verifyToken(token, {
+      secretKey: process.env.CLERK_SECRET_KEY
+    });
+    next();
+  } catch (error: any) {
+    return next(new AppError(error.message, httpStatus.UNAUTHORIZED));
   }
 }

@@ -9,6 +9,7 @@ import logger from "./logger";
 import AppError from "./utils/AppError";
 import { errorResponse } from "./config/responseConfig";
 import routes from "./routes/route";
+import loggerMiddleware from "./middleware/logger.middleware";
 
 const PORT = process.env.PORT || 5000;
 const app: Express = express();
@@ -26,7 +27,7 @@ app.get("/", (_: Request, res: Response) => {
   res.status(httpStatus.OK).send("hello world");
 });
 
-app.use("/v1", routes);
+app.use("/v1", loggerMiddleware, routes);
 
 app.all("*", (req: Request, res: Response, next: NextFunction) => {
   logger.error(`can't find route ${req.originalUrl}`);
