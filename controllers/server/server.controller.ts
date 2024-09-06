@@ -12,13 +12,13 @@ export async function createServer(
   res: Response,
   next: NextFunction
 ) {
-  const userProfile = await findUserProfile({ userId: req.body.userId });
+  const userProfile = await findUserProfile({ id: req.body.userId });
 
   if (!userProfile)
-    next(new AppError("Can't find user", httpStatus.BAD_REQUEST));
+    return next(new AppError("Can't find user", httpStatus.BAD_REQUEST));
 
   const serverDetails: Prisma.ServerCreateInput = {
-    name: req.body.name,
+    name: req.body.serverName,
     profile: {
       connect: { id: userProfile!.id },
     },

@@ -19,11 +19,6 @@ export async function checkUserExists(
   if (isUserExists)
     recentServer = await findRecentServerByUserId(isUserExists.id);
 
-  console.log({
-    user: isUserExists,
-    server: recentServer,
-  });
-
   successResponse(res, httpStatus.OK, {
     user: isUserExists,
     server: recentServer,
@@ -38,7 +33,7 @@ export async function createUserProfile(
   const isUserExists = await findUserProfile({ userId: req.body.userId });
 
   if (isUserExists)
-    next(new AppError("User already exists", httpStatus.CONFLICT));
+    return next(new AppError("User already exists", httpStatus.CONFLICT));
 
   const createUser = await createProfile(req.body);
   successResponse(res, httpStatus.OK, createUser);

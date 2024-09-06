@@ -9,7 +9,7 @@ const createServerSchema = z.object({
     .min(1, { message: "User id must not empty" })
     .max(255, { message: "User id can't exceed 255 characters " }),
 
-  name: z
+  serverName: z
     .string({ message: "Server name must be string" })
     .trim()
     .min(3, { message: "Server name at least 3 characters long" })

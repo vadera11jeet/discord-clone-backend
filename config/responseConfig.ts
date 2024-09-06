@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { response, Response } from "express";
 import logger from "../logger";
 
 export const successResponse = function (
@@ -7,10 +7,11 @@ export const successResponse = function (
   data: unknown,
   message?: string
 ): void {
-  
-  logger.info(
-    `responseData: ${JSON.stringify(data)} statusCode: ${statusCode} message: ${message ?? "success"}`
-  );
+  logger.info({
+    responseData: data,
+    statusCode,
+    message: message ?? "success",
+  });
 
   res.status(statusCode).json({
     data,
