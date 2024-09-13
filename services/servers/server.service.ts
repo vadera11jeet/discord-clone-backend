@@ -18,3 +18,25 @@ export async function createDiscordServer(
 ) {
   return db.server.create({ data: serverInfo });
 }
+
+export async function getServerByUserId(
+  profileId: string,
+  take: number = 10,
+  skip: number = 0
+) {
+  const serverList = await db.server.findMany({
+    skip,
+    take,
+    where: {
+      profileId: profileId,
+    },
+  });
+
+  const totalCount = await db.server.count();
+
+  return {
+    serverList,
+    totalCount,
+    hasMore: false,
+  };
+}
