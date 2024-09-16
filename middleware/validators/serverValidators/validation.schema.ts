@@ -1,8 +1,6 @@
-import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
-import bodyValidator from "./validator";
 
-const createServerSchema = z.object({
+export const createServerSchema = z.object({
   userId: z
     .string({ message: "user id must be string" })
     .trim()
@@ -21,12 +19,16 @@ const createServerSchema = z.object({
     .url({ message: "Image url is not valid URL" }),
 });
 
-function createServerValidation(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  bodyValidator(req, res, next, createServerSchema);
-}
+export const profileParamsValidator = z.object({
+  profileId: z
+    .string({ message: "Profile id must be string" })
+    .trim()
+    .uuid({ message: "Profile id must be uuid" }),
+});
 
-export default createServerValidation;
+export const serverIdParamsValidator = z.object({
+  serverId: z
+    .string({ message: "Profile id must be string" })
+    .trim()
+    .uuid({ message: "Profile id must be uuid" }),
+});

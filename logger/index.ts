@@ -21,7 +21,7 @@ function createLoggerInstance() {
   if (env === "production") {
     const fileTransporterError = new transports.File({
       filename: "error.log",
-      level: "error",   
+      level: "error",
     });
 
     const combineFileTransporterLogs = new transports.File({

@@ -40,3 +40,11 @@ export async function getServerByUserId(
     hasMore: false,
   };
 }
+
+export async function getServerDetailsById(serverId: string) {
+  return db.server.findUnique({
+    where: {
+      id: serverId,
+    },
+  });
+}

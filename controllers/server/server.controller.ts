@@ -8,6 +8,7 @@ import AppError from "../../utils/AppError";
 import {
   createDiscordServer,
   getServerByUserId,
+  getServerDetailsById,
 } from "../../services/servers/server.service";
 
 import { DEFAULT_PAGE_LIMIT } from "../../config/constant";
@@ -17,7 +18,9 @@ export async function createServer(
   res: Response,
   next: NextFunction
 ) {
-  const userProfile = await findUserProfile({ id: req.body.userId });
+  const userProfile = await findUserProfile({
+    OR: [{ id: req.body.userId }, { userId: req.body.userId }],
+  });
 
   if (!userProfile)
     return next(new AppError("Can't find user", httpStatus.BAD_REQUEST));
@@ -67,4 +70,13 @@ export async function getUserServiceDetails(
   if (page * limit < serversInfo.totalCount) serversInfo.hasMore = true;
 
   successResponse(res, httpStatus.OK, { ...serversInfo });
+}
+
+export async function getServerDetails(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const server = await getServerDetailsById(req.params.serverId);
+  successResponse(res, httpStatus.OK, server);
 }

@@ -16,7 +16,7 @@ export async function authentication(
 
   try {
     await clerkClient.verifyToken(token, {
-      secretKey: process.env.CLERK_SECRET_KEY
+      secretKey: process.env.CLERK_SECRET_KEY,
     });
     next();
   } catch (error: any) {
