@@ -28,6 +28,10 @@ export const profileParamsValidator = z.object({
 
 export const serverIdParamsValidator = z.object({
   serverId: z
+    .string({ message: "Server id must be string" })
+    .trim()
+    .uuid({ message: "Server id must be uuid" }),
+  profileId: z
     .string({ message: "Profile id must be string" })
     .trim()
     .uuid({ message: "Profile id must be uuid" }),

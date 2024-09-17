@@ -77,6 +77,9 @@ export async function getServerDetails(
   res: Response,
   next: NextFunction
 ) {
-  const server = await getServerDetailsById(req.params.serverId);
+  const server = await getServerDetailsById(
+    req.params.serverId,
+    req.params.profileId
+  );
   successResponse(res, httpStatus.OK, server);
 }

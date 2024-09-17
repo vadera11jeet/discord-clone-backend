@@ -16,8 +16,10 @@ router.route("/").post(authentication, createServerValidation, createServer);
 
 router
   .route("/user-server-details/:profileId")
-  .get(profileIdValidator, getUserServiceDetails);
+  .get(authentication, profileIdValidator, getUserServiceDetails);
 
-router.route("/:id").get(authentication, serverIdValidator, getServerDetails);
+router
+  .route("/:serverId/:profileId")
+  .get(authentication, serverIdValidator, getServerDetails);
 
 export default router;

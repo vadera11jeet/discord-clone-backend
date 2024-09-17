@@ -41,10 +41,33 @@ export async function getServerByUserId(
   };
 }
 
-export async function getServerDetailsById(serverId: string) {
+export async function getServerDetailsById(
+  serverId: string,
+  profileId: string
+) {
   return db.server.findUnique({
     where: {
       id: serverId,
+      members: {
+        some: {
+          profileId,
+        },
+      },
+    },
+    include: {
+      channels: {
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
+      members: {
+        include: {
+          profile: true,
+        },
+        orderBy: {
+          role: "asc",
+        },
+      },
     },
   });
 }
