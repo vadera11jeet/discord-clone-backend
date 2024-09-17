@@ -21,3 +21,22 @@ export default function bodyValidator(
 
   next();
 }
+
+export function paramsValidator(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+  validationSchema: z.ZodType
+) {
+  const validate = validationSchema.safeParse(req.params);
+
+  if (validate.error)
+    return next(
+      new AppError(
+        validate.error.errors[0].message,
+        httpStatus.UNPROCESSABLE_ENTITY
+      )
+    );
+
+  next();
+}

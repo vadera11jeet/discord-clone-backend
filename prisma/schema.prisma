@@ -21,7 +21,7 @@ model Profile{
   email String @db.Text @unique
 
   servers Server[]
-  mermbers Member[]
+  members Member[]
   channles Channel[]
 
 
@@ -49,7 +49,7 @@ model Server{
 
 enum MemberRole {
   ADMIN
-  MODARATOR
+  MODERATOR
   GUEST
 }
 

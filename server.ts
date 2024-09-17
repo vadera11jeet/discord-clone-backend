@@ -34,9 +34,9 @@ app.all("*", (req: Request, res: Response, next: NextFunction) => {
   next(new AppError("can't find route", httpStatus.NOT_FOUND));
 });
 
-app.use((err: AppError, _: Request, res: Response, next: NextFunction) => {
+app.use((err: AppError, req: Request, res: Response, next: NextFunction) => {
   logger.error(
-    `status: ${err.statusCode ?? httpStatus.INTERNAL_SERVER_ERROR} message: ${err}`
+    `status: ${err.statusCode ?? httpStatus.INTERNAL_SERVER_ERROR} message: ${err} url: ${req.url}`
   );
   if (res.headersSent) {
     return next(err);

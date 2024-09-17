@@ -1,10 +1,8 @@
 import { Prisma } from "@prisma/client";
 import { db } from "../../lib/db";
 
-export function findUserProfile(
-  whereCondition: Prisma.ProfileWhereUniqueInput
-) {
-  return db.profile.findUnique({
+export function findUserProfile(whereCondition: Prisma.ProfileWhereInput) {
+  return db.profile.findFirst({
     where: whereCondition,
   });
 }

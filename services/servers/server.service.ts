@@ -13,6 +13,61 @@ export async function findRecentServerByUserId(userId: string) {
   });
 }
 
-export async function createDiscordServer(serverInfo: Prisma.ServerCreateInput) {
+export async function createDiscordServer(
+  serverInfo: Prisma.ServerCreateInput
+) {
   return db.server.create({ data: serverInfo });
+}
+
+export async function getServerByUserId(
+  profileId: string,
+  take: number = 10,
+  skip: number = 0
+) {
+  const serverList = await db.server.findMany({
+    skip,
+    take,
+    where: {
+      profileId: profileId,
+    },
+  });
+
+  const totalCount = await db.server.count();
+
+  return {
+    serverList,
+    totalCount,
+    hasMore: false,
+  };
+}
+
+export async function getServerDetailsById(
+  serverId: string,
+  profileId: string
+) {
+  return db.server.findUnique({
+    where: {
+      id: serverId,
+      members: {
+        some: {
+          profileId,
+        },
+      },
+    },
+    include: {
+      channels: {
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
+      members: {
+        include: {
+          profile: true,
+        },
+        orderBy: {
+          role: "asc",
+        },
+      },
+    },
+  });
 }
