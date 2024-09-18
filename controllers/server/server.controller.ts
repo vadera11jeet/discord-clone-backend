@@ -6,9 +6,11 @@ import { successResponse } from "../../config/responseConfig";
 import { findUserProfile } from "../../services/auth/auth.service";
 import AppError from "../../utils/AppError";
 import {
+  addMemberByServerId,
   createDiscordServer,
   getServerByUserId,
   getServerDetailsById,
+  getServerInfoByInviteCode,
 } from "../../services/servers/server.service";
 
 import { DEFAULT_PAGE_LIMIT } from "../../config/constant";
@@ -82,4 +84,32 @@ export async function getServerDetails(
     req.params.profileId
   );
   successResponse(res, httpStatus.OK, server);
+}
+
+export async function checkMemberAlreadyJoinServer(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const server = await getServerInfoByInviteCode(
+    req.params.inviteCode,
+    req.params.profileId
+  );
+
+  if (server) return successResponse(res, httpStatus.OK, server);
+
+  return successResponse(res, httpStatus.OK, { server: null });
+}
+
+export async function addMemberByInviteCode(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const updatedServer = await addMemberByServerId(
+    req.body.inviteCode,
+    req.body.profileId
+  );
+
+  return successResponse(res, httpStatus.OK, updatedServer);
 }

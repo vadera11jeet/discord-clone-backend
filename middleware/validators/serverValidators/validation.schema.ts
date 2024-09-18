@@ -36,3 +36,14 @@ export const serverIdParamsValidator = z.object({
     .trim()
     .uuid({ message: "Profile id must be uuid" }),
 });
+
+export const inviteCodeProfileValidator = z.object({
+  inviteCode: z
+    .string({ message: "Invite code must be string" })
+    .trim()
+    .uuid({ message: "Invite code must be uuid" }),
+  profileId: z
+    .string({ message: "Profile id must be string" })
+    .trim()
+    .uuid({ message: "Profile id must be uuid" }),
+});

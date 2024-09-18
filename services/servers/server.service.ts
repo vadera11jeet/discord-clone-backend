@@ -71,3 +71,38 @@ export async function getServerDetailsById(
     },
   });
 }
+export async function getServerInfoByInviteCode(
+  inviteCode: string,
+  profileId: string
+) {
+  return db.server.findFirst({
+    where: {
+      inviteCode,
+      members: {
+        some: {
+          profileId,
+        },
+      },
+    },
+  });
+}
+
+export async function addMemberByServerId(
+  inviteCode: string,
+  profileId: string
+) {
+  return db.server.update({
+    where: {
+      inviteCode: inviteCode,
+    },
+    data: {
+      members: {
+        create: [
+          {
+            profileId,
+          },
+        ],
+      },
+    },
+  });
+}

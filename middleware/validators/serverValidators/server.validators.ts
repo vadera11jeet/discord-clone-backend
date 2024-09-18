@@ -5,6 +5,7 @@ import {
   createServerSchema,
   profileParamsValidator,
   serverIdParamsValidator,
+  inviteCodeProfileValidator,
 } from "./validation.schema";
 
 function createServerValidation(
@@ -29,6 +30,22 @@ export function serverIdValidator(
   next: NextFunction
 ) {
   paramsValidator(req, res, next, serverIdParamsValidator);
+}
+
+export function inviteCodeAndProfileIdValidator(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  paramsValidator(req, res, next, inviteCodeProfileValidator);
+}
+
+export function inviteCodeAndProfileBodyValidator(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  bodyValidator(req, res, next, inviteCodeProfileValidator);
 }
 
 export default createServerValidation;
