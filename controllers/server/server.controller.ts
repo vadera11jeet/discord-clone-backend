@@ -6,14 +6,17 @@ import { successResponse } from "../../config/responseConfig";
 import { findUserProfile } from "../../services/auth/auth.service";
 import AppError from "../../utils/AppError";
 import {
-  addMemberByServerId,
   createDiscordServer,
   getServerByUserId,
   getServerDetailsById,
-  getServerInfoByInviteCode,
+  isUserAlreadyMember,
+  addInvitedMember,
+  editServerInfoById,
+  findServer,
 } from "../../services/servers/server.service";
 
 import { DEFAULT_PAGE_LIMIT } from "../../config/constant";
+import { UserProfileType } from "../../types/express";
 
 export async function createServer(
   req: Request,
@@ -25,7 +28,7 @@ export async function createServer(
   });
 
   if (!userProfile)
-    return next(new AppError("Can't find user", httpStatus.BAD_REQUEST));
+    return next(new AppError("Can't find user", httpStatus.NOT_FOUND));
 
   const serverDetails: Prisma.ServerCreateInput = {
     name: req.body.serverName,
@@ -63,11 +66,8 @@ export async function getUserServiceDetails(
   const page = parseInt((req.query.page as string) ?? 1);
   const skip = (page - 1) * DEFAULT_PAGE_LIMIT;
 
-  const serversInfo = await getServerByUserId(
-    req.params.profileId,
-    limit,
-    skip
-  );
+  const user = req.user as UserProfileType;
+  const serversInfo = await getServerByUserId(user.id, limit, skip);
 
   if (page * limit < serversInfo.totalCount) serversInfo.hasMore = true;
 
@@ -79,37 +79,75 @@ export async function getServerDetails(
   res: Response,
   next: NextFunction
 ) {
-  const server = await getServerDetailsById(
-    req.params.serverId,
-    req.params.profileId
-  );
+  const isServerExists = await findServer({
+    id: req.params.serverId,
+  });
+
+  if (!isServerExists)
+    next(new AppError("Invalid server id", httpStatus.NOT_FOUND));
+
+  const user = req.user as UserProfileType;
+  const server = await getServerDetailsById(req.params.serverId, user.id);
   successResponse(res, httpStatus.OK, server);
 }
 
-export async function checkMemberAlreadyJoinServer(
+export async function checkUserAlreadyMember(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  const server = await getServerInfoByInviteCode(
-    req.params.inviteCode,
-    req.params.profileId
-  );
+  const isServerExists = await findServer({
+    inviteCode: req.params.inviteCode,
+  });
+
+  if (!isServerExists) {
+    return next(new AppError("Invalid invite code", httpStatus.NOT_FOUND));
+  }
+
+  const user = req.user as UserProfileType;
+  const server = await isUserAlreadyMember(req.params.inviteCode, user.id);
 
   if (server) return successResponse(res, httpStatus.OK, server);
 
-  return successResponse(res, httpStatus.OK, { server: null });
+  return successResponse(res, httpStatus.OK, null);
 }
 
-export async function addMemberByInviteCode(
+export async function addInvitedMemberToServer(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  const updatedServer = await addMemberByServerId(
-    req.body.inviteCode,
-    req.body.profileId
-  );
+  const isServerExists = await findServer({
+    inviteCode: req.params.inviteCode,
+  });
 
-  return successResponse(res, httpStatus.OK, updatedServer);
+  if (!isServerExists) {
+    return next(new AppError("Invalid invite code", httpStatus.NOT_FOUND));
+  }
+
+  const user = req.user as UserProfileType;
+
+  const server = await addInvitedMember(req.params.inviteCode, user.id);
+  return successResponse(res, httpStatus.OK, server);
+}
+
+export async function editServeInfo(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const isServerExists = await findServer({
+    id: req.params.serverId,
+  });
+
+  if (!isServerExists)
+    next(new AppError("Invalid server id", httpStatus.NOT_FOUND));
+
+  const user = req.user as UserProfileType;
+
+  const server = await editServerInfoById(req.params.serverId, user.id, {
+    name: req.body.serverName,
+    imageUrl: req.body.imageUrl,
+  });
+  return successResponse(res, httpStatus.OK, server);
 }

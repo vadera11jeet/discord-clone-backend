@@ -28,7 +28,11 @@ export async function getServerByUserId(
     skip,
     take,
     where: {
-      profileId: profileId,
+      members: {
+        some: {
+          profileId: profileId,
+        },
+      },
     },
   });
 
@@ -71,13 +75,14 @@ export async function getServerDetailsById(
     },
   });
 }
-export async function getServerInfoByInviteCode(
+
+export async function isUserAlreadyMember(
   inviteCode: string,
   profileId: string
 ) {
   return db.server.findFirst({
     where: {
-      inviteCode,
+      inviteCode: inviteCode,
       members: {
         some: {
           profileId,
@@ -87,10 +92,7 @@ export async function getServerInfoByInviteCode(
   });
 }
 
-export async function addMemberByServerId(
-  inviteCode: string,
-  profileId: string
-) {
+export async function addInvitedMember(inviteCode: string, profileId: string) {
   return db.server.update({
     where: {
       inviteCode: inviteCode,
@@ -104,5 +106,25 @@ export async function addMemberByServerId(
         ],
       },
     },
+  });
+}
+
+export async function editServerInfoById(
+  serverId: string,
+  profileId: string,
+  server: Prisma.ServerUpdateInput
+) {
+  return db.server.update({
+    where: { id: serverId, profileId },
+    data: {
+      name: server.name,
+      imageUrl: server.imageUrl,
+    },
+  });
+}
+
+export async function findServer(where: Prisma.ServerWhereUniqueInput) {
+  return db.server.findUnique({
+    where,
   });
 }

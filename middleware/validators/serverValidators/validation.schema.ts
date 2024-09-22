@@ -19,22 +19,29 @@ export const createServerSchema = z.object({
     .url({ message: "Image url is not valid URL" }),
 });
 
-export const profileParamsValidator = z.object({
-  profileId: z
-    .string({ message: "Profile id must be string" })
-    .trim()
-    .uuid({ message: "Profile id must be uuid" }),
-});
-
 export const serverIdParamsValidator = z.object({
   serverId: z
     .string({ message: "Server id must be string" })
     .trim()
     .uuid({ message: "Server id must be uuid" }),
-  profileId: z
-    .string({ message: "Profile id must be string" })
+});
+
+export const inviteCodeAndProfileIdValidation = z.object({
+  inviteCode: z
+    .string({ message: "Invite code must be string" })
     .trim()
-    .uuid({ message: "Profile id must be uuid" }),
+    .uuid({ message: "Invite code  must be uuid" }),
+});
+
+export const editServerBodyValidator = z.object({
+  name: z
+    .string({ message: "Server name is required" })
+    .min(3, { message: "Server name have minimum 3 characters" })
+    .trim(),
+  imageUrl: z
+    .string({ message: "Url name must be string" })
+    .trim()
+    .url({ message: "Image url is not valid URL" }),
 });
 
 export const inviteCodeProfileValidator = z.object({

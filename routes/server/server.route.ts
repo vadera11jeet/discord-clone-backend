@@ -1,40 +1,37 @@
 import express, { Router } from "express";
-import createServerValidation, {
-  inviteCodeAndProfileIdValidator,
-  profileIdValidator,
+import {
+  createServerValidation,
+  editServerValidator,
+  inviteCodeValidator,
   serverIdValidator,
 } from "../../middleware/validators/serverValidators/server.validators";
 import {
   createServer,
   getUserServiceDetails,
   getServerDetails,
-  checkMemberAlreadyJoinServer,
-  addMemberByInviteCode,
+  checkUserAlreadyMember,
+  addInvitedMemberToServer,
+  editServeInfo,
 } from "../../controllers/server/server.controller";
 import { authentication } from "../../middleware/auth.middleware";
 import catchAsync from "../../utils/catchAsync";
 
 const router: Router = express.Router();
 
-router
-  .route("/")
-  .post(authentication, createServerValidation, catchAsync(createServer));
+router.use(authentication);
+
+router.route("/").post(createServerValidation, catchAsync(createServer));
+
+router.route("/user-server-details").get(catchAsync(getUserServiceDetails));
 
 router
-  .route("/user-server-details/:profileId")
-  .get(authentication, profileIdValidator, catchAsync(getUserServiceDetails));
+  .route("/:serverId")
+  .get(serverIdValidator, catchAsync(getServerDetails))
+  .patch(serverIdValidator, editServerValidator, catchAsync(editServeInfo));
 
 router
-  .route("/invite/:inviteCode/:profileId")
-  .get(
-    authentication,
-    inviteCodeAndProfileIdValidator,
-    catchAsync(checkMemberAlreadyJoinServer)
-  )
-  .patch(authentication, catchAsync(addMemberByInviteCode));
-
-router
-  .route("/:serverId/:profileId")
-  .get(authentication, serverIdValidator, catchAsync(getServerDetails));
+  .route("/invite/:inviteCode")
+  .get(inviteCodeValidator, catchAsync(checkUserAlreadyMember))
+  .patch(inviteCodeValidator, catchAsync(addInvitedMemberToServer));
 
 export default router;
