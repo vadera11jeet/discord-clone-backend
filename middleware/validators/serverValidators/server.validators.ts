@@ -3,24 +3,17 @@ import { NextFunction, Request, Response } from "express";
 import bodyValidator, { paramsValidator } from "../validator";
 import {
   createServerSchema,
-  profileParamsValidator,
   serverIdParamsValidator,
+  editServerBodyValidator,
+  inviteCodeAndProfileIdValidation,
 } from "./validation.schema";
 
-function createServerValidation(
+export function createServerValidation(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   bodyValidator(req, res, next, createServerSchema);
-}
-
-export function profileIdValidator(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  paramsValidator(req, res, next, profileParamsValidator);
 }
 
 export function serverIdValidator(
@@ -31,4 +24,18 @@ export function serverIdValidator(
   paramsValidator(req, res, next, serverIdParamsValidator);
 }
 
-export default createServerValidation;
+export function inviteCodeValidator(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  paramsValidator(req, res, next, inviteCodeAndProfileIdValidation);
+}
+
+export function editServerValidator(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  bodyValidator(req, res, next, editServerBodyValidator);
+}

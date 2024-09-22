@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { clerkClient } from "@clerk/clerk-sdk-node";
 import AppError from "../utils/AppError";
 import httpStatus from "http-status";
+import { getUserInfoByUserID } from "../services/auth/auth.service";
 
 export async function authentication(
   req: Request,
@@ -15,9 +16,11 @@ export async function authentication(
   }
 
   try {
-    await clerkClient.verifyToken(token, {
+    const response = await clerkClient.verifyToken(token, {
       secretKey: process.env.CLERK_SECRET_KEY,
     });
+
+    req.user = await getUserInfoByUserID(response.sub);
     next();
   } catch (error: any) {
     return next(new AppError(error.message, httpStatus.UNAUTHORIZED));
