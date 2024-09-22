@@ -24,6 +24,22 @@ export function serverIdValidator(
   paramsValidator(req, res, next, serverIdParamsValidator);
 }
 
+export function inviteCodeAndProfileIdValidator(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  paramsValidator(req, res, next, inviteCodeAndProfileIdValidation);
+}
+
+export function inviteCodeAndProfileBodyValidator(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  bodyValidator(req, res, next, inviteCodeAndProfileIdValidation);
+}
+
 export function inviteCodeValidator(
   req: Request,
   res: Response,
