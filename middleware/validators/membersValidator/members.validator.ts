@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import bodyValidator, { paramsValidator } from "../validator";
-import { memberIdAndServerIdSchema } from "./validation.schema";
+import {
+  memberIdAndServerIdSchema,
+  updateRoleSchema,
+} from "./validation.schema";
 
 export function memberIdAndSeverIdParamsValidator(
   req: Request,
@@ -8,4 +11,12 @@ export function memberIdAndSeverIdParamsValidator(
   next: NextFunction
 ) {
   paramsValidator(req, res, next, memberIdAndServerIdSchema);
+}
+
+export function validateUpdateRoleBody(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  bodyValidator(req, res, next, updateRoleSchema);
 }
